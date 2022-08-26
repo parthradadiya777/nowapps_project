@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 
 class ProductController extends GetxController{
-  RxInt p = 0.obs;
+  RxInt quantity = 0.obs;
 
 
   void increment(){
-    p++;
+    quantity++;
     update();
   }
 
   void Decrement(){
-    if(p>0){
-      p--;
+    if(quantity>0){
+      quantity--;
     }
     update();
   }

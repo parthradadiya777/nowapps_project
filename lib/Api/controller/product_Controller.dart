@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
+import 'package:project1/product_details/productslist.dart';
 import '../serices/product_services.dart';
 
 class ProductApiController extends GetxController with StateMixin {
- // RxList data = <ProductElement>[].obs;
-  var isLoading = true.obs;
 
-  void enquiryList(){
-    ProductServices().enquiryList().then((resp){
+
+  void ProductApiList(){
+    ProductServices().ProductServiceList().then((resp){
       Get.log("Success");
    //   log(resp.toString());
 

@@ -17,7 +17,7 @@ class _ProductListState extends State<ProductList> {
 
 
 
-  ProductApiController p1 = ProductApiController();
+  ProductApiController productApiController = ProductApiController();
 
 
 
@@ -28,7 +28,7 @@ class _ProductListState extends State<ProductList> {
   }
   @override
   Widget build(BuildContext context) {
-  p1.enquiryList();
+  productApiController.ProductApiList();
 
   final data = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
  var name = data['shop'];
@@ -53,7 +53,7 @@ class _ProductListState extends State<ProductList> {
            //     color: Colors.blueGrey,
               padding: const EdgeInsets.symmetric(vertical: 7, ),
                 child:
-                    p1.obx((enq)=>ListView.builder(
+                    productApiController.obx((enq)=>ListView.builder(
                       itemCount: enq.length,
                       itemBuilder: (context,index){
                         return Padding(

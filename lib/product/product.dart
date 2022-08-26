@@ -25,10 +25,7 @@ class _ProductState extends State<Product> {
     var image = whole['prodImage'];
     var name = whole['prodName'];
     var price = whole['prodPrice'];
-
-    double q = double.parse(price);
-  //  controller.q.value = price;
-    //p1(price);
+    double totalPrice = double.parse(price);
      double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -36,7 +33,7 @@ class _ProductState extends State<Product> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: appbar,
-        title: Text('Product'),
+        title: const Text('Product'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,12 +47,12 @@ class _ProductState extends State<Product> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text('Product Name: $name',style: style),
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text('Product Price: $price',style: style,),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -64,7 +61,7 @@ class _ProductState extends State<Product> {
               controller.increment();
 
                 }, icon: Icon(Icons.add,color: textColor,)),
-                Obx(()=> Text(controller.p.toString(),style: style)),
+                Obx(()=> Text(controller.quantity.toString(),style: style)),
                 IconButton(onPressed: (){
                  controller.Decrement();
                 }, icon: Icon(Icons.remove,color: textColor,))
@@ -72,17 +69,17 @@ class _ProductState extends State<Product> {
 
 
           ),
-        Obx(() =>   controller.p.value>0?  Row(
+        Obx(() =>   controller.quantity.value>0?  Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
 
-            Text("Price: ${q * controller.p.value }",style: style),
-            Text("Quntity "+controller.p.toString(),style: style),
+            Text("Price: ${totalPrice * controller.quantity.value}",style: style),
+            Text("Quantity ${controller.quantity}",style: style),
             InkWell(
               onTap: (){
                 Get.to(()=>AddtoCartPage(),arguments: {
-                  'price':q,
-                  'quntity':controller.p,
+                  'price':totalPrice * controller.quantity.value,
+                  'quantity':controller.quantity,
                   'image':image,
                 });},
               child: Container(

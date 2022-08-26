@@ -1,11 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/otp_field_style.dart';
-import 'package:project1/loginscreen/widget/function.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
-
 import 'authclass.dart';
 import 'controller/authcontroller.dart';
 

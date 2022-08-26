@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:project1/product_details/productslist.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
@@ -34,7 +32,7 @@ class _ShopePageState extends State<ShopePage> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: appbar,title: Text('Store Details',style: style.copyWith(fontSize:20 ),),),
+        backgroundColor: appbar,title: Text('Store List',style: style.copyWith(fontSize:20 ),),),
       body: SizedBox(
         height: height,
         width: width,
@@ -55,7 +53,6 @@ class _ShopePageState extends State<ShopePage> {
       Navigator.pushNamed(context, ProductList.id,arguments: {
         'shop': p[index]
       });
-   // log("Taped on Shop List part");
     },
     );
     }),
