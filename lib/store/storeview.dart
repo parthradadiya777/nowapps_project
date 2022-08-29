@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project1/checkIn/checkin.dart';
 import 'package:project1/product_details/productslist.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
 import 'package:project1/store/widgets/store_card.dart';
@@ -8,6 +9,7 @@ import 'package:project1/store/widgets/store_card.dart';
 
 class ShopePage extends StatefulWidget {
   const ShopePage({Key? key}) : super(key: key);
+  static const id = '/shoppage';
 
   @override
   State<ShopePage> createState() => _ShopePageState();
@@ -50,7 +52,7 @@ class _ShopePageState extends State<ShopePage> {
     return Store_card(
     shop_name: p[index],
     onTap: () {
-      Navigator.pushNamed(context, ProductList.id,arguments: {
+      Navigator.pushNamed(context, CheckIn.id,arguments: {
         'shop': p[index]
       });
     },

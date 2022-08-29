@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
 
@@ -72,16 +75,23 @@ class _ProductState extends State<Product> {
         Obx(() =>   controller.quantity.value>0?  Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-
             Text("Price: ${totalPrice * controller.quantity.value}",style: style),
             Text("Quantity ${controller.quantity}",style: style),
             InkWell(
               onTap: (){
-                Get.to(()=>AddtoCartPage(),arguments: {
-                  'price':totalPrice * controller.quantity.value,
-                  'quantity':controller.quantity,
-                  'image':image,
-                });},
+                Fluttertoast.showToast(msg: 'Your Product Successfully Added Cart page');
+                Navigator.pop(context);
+                 FirebaseAuth auth = FirebaseAuth.instance;
+                FirebaseFirestore.instance.collection('user').doc(auth.currentUser!.uid).set({
+                  'products':FieldValue.arrayUnion([{
+                'price':totalPrice * controller.quantity.value  ,
+                'quantity':controller.quantity.value,
+                'image':image,
+                    'name':name
+                }])
+                },SetOptions(merge: true));
+              },
+
               child: Container(
                 alignment: Alignment.center,
                 height: 30,

@@ -4,6 +4,7 @@ import 'package:project1/product/product.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
 
 import '../Api/controller/product_Controller.dart';
+import '../addtocart/addtocart.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({Key? key}) : super(key: key);
@@ -40,8 +41,13 @@ class _ProductListState extends State<ProductList> {
       appBar: AppBar(
         backgroundColor: appbar,
         title: Text(name),
-
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_)=> AddtoCartPage()));
+          }, icon: const Icon(Icons.add_shopping_cart))
+        ],
       ),
+
       body: Container(
         height: height,
         width: width,

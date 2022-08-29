@@ -17,11 +17,10 @@ class _PhoneViewState extends State<PhoneView> {
   String verificationIdFinal = "";
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-
         backgroundColor: appbar,
         title: const Text(
           "SignUp",
