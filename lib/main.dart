@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ShopePage(),
+      home: PhoneView(),
       routes: {
         Product.id: (context)=> Product(),
         ProductList.id : (context) => ProductList(),
