@@ -1,34 +1,43 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Api/controller/product_Controller.dart';
 import '../addtocart/addtocart.dart';
+import '../model/sqflite_model.dart';
+import '../sqflite_service/sqflite_service.dart';
 import 'controller/productcontroller.dart';
 
-class Product extends StatefulWidget {
-  const Product({Key? key}) : super(key: key);
+class Product_quntity extends StatefulWidget {
 
   static const id = '/product';
   @override
-  State<Product> createState() => _ProductState();
+  State<Product_quntity> createState() => _Product_quntityState();
 }
 
-class _ProductState extends State<Product> {
+class _Product_quntityState extends State<Product_quntity> {
 
   ProductController controller = ProductController();
 
 
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(() =>ProductApiController());
+    final dbhelper = Producthelper.instance;
+
     final data = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
     var whole = data['whole'];
-    var image = whole['prodImage'];
-    var name = whole['prodName'];
-    var price = whole['prodPrice'];
-    double totalPrice = double.parse(price);
+    var image = whole['thumbnail'];
+    var name = whole['title'];
+    var price = whole['price'];
+    double totalPrice = double.parse(price.toString());
      double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -66,11 +75,9 @@ class _ProductState extends State<Product> {
                 }, icon: Icon(Icons.add,color: textColor,)),
                 Obx(()=> Text(controller.quantity.toString(),style: style)),
                 IconButton(onPressed: (){
-                 controller.Decrement();
+                 controller.decrement();
                 }, icon: Icon(Icons.remove,color: textColor,))
               ],
-
-
           ),
         Obx(() =>   controller.quantity.value>0?  Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -78,19 +85,48 @@ class _ProductState extends State<Product> {
             Text("Price: ${totalPrice * controller.quantity.value}",style: style),
             Text("Quantity ${controller.quantity}",style: style),
             InkWell(
-              onTap: (){
-                Fluttertoast.showToast(msg: 'Your Product Successfully Added Cart page');
-                Navigator.pop(context);
-                 FirebaseAuth auth = FirebaseAuth.instance;
-                FirebaseFirestore.instance.collection('user').doc(auth.currentUser!.uid).set({
-                  'products':FieldValue.arrayUnion([{
-                'price':totalPrice * controller.quantity.value  ,
-                'quantity':controller.quantity.value,
-                'image':image,
-                    'name':name
-                }])
-                },SetOptions(merge: true));
-              },
+               onTap: () {
+                 showDialog(context: context, builder: (_){
+                   return AlertDialog(
+                     title: const Text('Add Product'),
+                     content: const Text('Are You Sure Add Cart Page'),
+                     actions: [
+                       TextButton(onPressed: ()async{
+                         Get.back();
+                         FirebaseFirestore.instance.collection('iamge').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                           'images':FieldValue.arrayUnion([
+                             image,
+                           ])
+                         });
+                         Fluttertoast.showToast(msg: 'Your Product Added Successfully');
+                         dbhelper.insertProduct(Product.fromMapObject({
+                           dbhelper.colname:  name,
+                           dbhelper.colprice: (totalPrice * controller.quantity.value).toString(),
+                           dbhelper.colimage:image
+                         }));
+                         SharedPreferences s =await SharedPreferences.getInstance();
+                         s.setInt('quantity', controller.quantity.value);
+                        // String base64Image = base64Encode(image);
+                        //  s.setString("image", base64Image);
+                      //   ImageSharedPrefs.saveImageToPrefs(image);
+                         String source = 'Błonie';
+
+                         List<int> list = utf8.encode(source);
+                         Uint8List bytes = Uint8List.fromList(list);
+                         String outcome = utf8.decode(bytes);
+
+                         ImageSharedPrefs.saveImageToPrefs(image);
+
+
+                       }, child: const Text('Yes')),
+                       TextButton(onPressed: (){
+                         Get.back();
+                       }, child: const Text('No')),
+                     ],
+                   );
+                 });
+               },
+
 
               child: Container(
                 alignment: Alignment.center,
@@ -103,7 +139,7 @@ class _ProductState extends State<Product> {
                 child: Text('Add To Cart',style: style),
 
               ),
-            ),
+            )
           ],
         ) : Container() )
 

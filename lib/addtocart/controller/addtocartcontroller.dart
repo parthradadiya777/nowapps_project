@@ -1,40 +1,39 @@
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:project1/sqflite_service/sqflite_service.dart';
+import '../../model/sqflite_model.dart';
 import '../../store/widgets/backgroundwidget.dart';
 
 
 class AddCartController extends GetxController{
 
-  Alignment alignment = Alignment.center;
-  Curve curve = Curves.ease;
-  Color c = Colors.yellow.withOpacity(0.5);
-  RxDouble height = 90.00.obs;
-  RxDouble width = 200.00.obs;
-  TextStyle style1 = TextStyle(fontSize: 20,color: textColor);
-  RxDouble size = 20.00.obs;
-  RxInt p = 0.obs;
 
+  RxDouble totalprice = 0.0.obs;
 
-
-   incrementvalue(index,data){
-       p.value = data['quantity']++;
-
-
-   update();
-
- //   data1(data);
+  void calcTotal() async{
+    double total = (await Producthelper().calculateTotal())[0]['Total'];
+    print(total);
+    totalprice.value = total;
+    print(totalprice);
+    update();
   }
 
-  void decrementvalue(data) {
-    if(data['quantity'] >=0) {
-      p.value = data['quantity']--;
+  var total=0.0.obs;
+  void increment(double price)=>total.value+=price;
+  void decrement(int price)=>total.value-=price;
 
 
-      update();
-    }
 
-    //   data1(data);
+
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    calcTotal();
+
   }
+
 
 }

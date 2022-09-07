@@ -9,7 +9,7 @@ class ProductController extends GetxController{
     update();
   }
 
-  void Decrement(){
+  void decrement(){
     if(quantity>0){
       quantity--;
     }

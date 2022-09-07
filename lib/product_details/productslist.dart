@@ -21,12 +21,6 @@ class _ProductListState extends State<ProductList> {
   ProductApiController productApiController = ProductApiController();
 
 
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
   productApiController.ProductApiList();
@@ -67,7 +61,7 @@ class _ProductListState extends State<ProductList> {
                           child: Card(
                             child: ListTile(
                               onTap: (){
-                                Navigator.pushNamed(context,Product.id,arguments: {
+                                Navigator.pushNamed(context,Product_quntity.id,arguments: {
                                   'whole':enq[index]
                                 } );
                               },
@@ -76,11 +70,11 @@ class _ProductListState extends State<ProductList> {
                                 height: 50,
                                 width: 50 ,
                                 decoration: BoxDecoration(
-                                  image:DecorationImage(image: NetworkImage(enq[index]['prodImage'],),)
+                                  image:DecorationImage(image: NetworkImage(enq[index]['thumbnail'],),),
                                 ),
                               ),
-                              title:                             Text(enq[index]['prodName']),
-                              trailing: Text(enq[index]['prodPrice']),
+                              title:  Text(enq[index]['title']),
+                           //   trailing: Text(enq[index]['price']),
                             ),
                           ),
                         );

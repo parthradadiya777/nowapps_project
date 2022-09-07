@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project1/checkIn/checkin.dart';
-import 'package:project1/product_details/productslist.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
 import 'package:project1/store/widgets/store_card.dart';
-
 
 
 
@@ -17,6 +15,7 @@ class ShopePage extends StatefulWidget {
 
 class _ShopePageState extends State<ShopePage> {
 
+
   List p = [
     'Reliance',
     'D-Mart',
@@ -27,6 +26,8 @@ class _ShopePageState extends State<ShopePage> {
 
   @override
   Widget build(BuildContext context) {
+
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 

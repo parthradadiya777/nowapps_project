@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:project1/checkIn/checkin.dart';
 import 'package:project1/loginscreen/loginscreen.dart';
@@ -10,6 +11,9 @@ import 'package:project1/store/storeview.dart';
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp]);
 
   runApp(const MyApp());
 }
@@ -24,9 +28,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PhoneView(),
+      home: ShopePage(),
       routes: {
-        Product.id: (context)=> Product(),
+        Product_quntity.id: (context)=> Product_quntity(),
         ProductList.id : (context) => ProductList(),
         CheckIn.id: (context)=> CheckIn(),
         ShopePage.id:(context)=> ShopePage(),
