@@ -48,6 +48,8 @@ Image? image;
     }
   }
 
+  Producthelper helper = Producthelper();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -271,7 +273,7 @@ Image? image;
                       }
                   ),
                 ),),
-              Row(
+       helper.count!=0?       Row(
                 children: [
                   Container(
                     width: width1 * .6,
@@ -315,17 +317,18 @@ Image? image;
 
                         InkWell(
                           onTap: (){
-                            showNotification();
                             showDialog(context: context, builder: (_){
                               return AlertDialog(
                                 title: const Text('Confirm'),
-                                content: const Text('Check Out In this Store'),
+                                content: const Text('Your Orders confirm Please CheckOut'),
                                 actions: [
                                   TextButton(onPressed: (){
 
                                     Get.back();
+                                    showNotification();
+
                                     // Get.off(ShopePage());
-                                    Navigator.pushNamedAndRemoveUntil(context, ShopePage.id, (route) => false);
+                           //         Navigator.pushNamedAndRemoveUntil(context, ShopePage.id, (route) => false);
 
                                   }, child: Text('Yes')),
                                   TextButton(onPressed: (){
@@ -370,7 +373,7 @@ Image? image;
       // Get.off(ShopePage());
       Navigator.pushNamedAndRemoveUntil(context, ShopePage.id, (route) => false);
 
-      }, child: Text('Yes')),
+      }, child: Text('Check Out')),
       TextButton(onPressed: (){
       Get.back();
 
@@ -396,7 +399,7 @@ Image? image;
       )
 
                 ],
-              ),
+              ) :Container()
             ],
           ),
         ),
