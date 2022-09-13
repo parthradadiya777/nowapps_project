@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Api/controller/product_Controller.dart';
 import '../addtocart/addtocart.dart';
 import '../model/sqflite_model.dart';
+import '../product_details/productslist.dart';
 import '../sqflite_service/sqflite_service.dart';
 import 'controller/productcontroller.dart';
 
@@ -87,17 +88,16 @@ class _Product_quntityState extends State<Product_quntity> {
             InkWell(
                onTap: () {
                  showDialog(context: context, builder: (_){
+
                    return AlertDialog(
                      title: const Text('Add Product'),
                      content: const Text('Are You Sure Add Cart Page'),
                      actions: [
                        TextButton(onPressed: ()async{
-                         Get.back();
-                         FirebaseFirestore.instance.collection('iamge').doc(FirebaseAuth.instance.currentUser!.uid).set({
-                           'images':FieldValue.arrayUnion([
-                             image,
-                           ])
+                         setState(() {
+                           Producthelper().count++;
                          });
+                         Get.back();
                          Fluttertoast.showToast(msg: 'Your Product Added Successfully');
                          dbhelper.insertProduct(Product.fromMapObject({
                            dbhelper.colname:  name,
@@ -109,18 +109,18 @@ class _Product_quntityState extends State<Product_quntity> {
                         // String base64Image = base64Encode(image);
                         //  s.setString("image", base64Image);
                       //   ImageSharedPrefs.saveImageToPrefs(image);
-                         String source = 'Błonie';
-
-                         List<int> list = utf8.encode(source);
-                         Uint8List bytes = Uint8List.fromList(list);
-                         String outcome = utf8.decode(bytes);
 
                          ImageSharedPrefs.saveImageToPrefs(image);
+
+
 
 
                        }, child: const Text('Yes')),
                        TextButton(onPressed: (){
                          Get.back();
+
+
+
                        }, child: const Text('No')),
                      ],
                    );

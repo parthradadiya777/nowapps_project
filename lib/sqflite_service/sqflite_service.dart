@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -7,7 +8,9 @@ import '../model/sqflite_model.dart';
 
 // First step
 
-class Producthelper extends GetxController{
+
+
+class Producthelper extends GetxController with StateMixin {
   static Producthelper? _producthelper;
   static Database? _database;
   String productTable = 'Product_table';
@@ -16,7 +19,7 @@ class Producthelper extends GetxController{
   String colprice = 'price';
   String colimage = 'image';
   String colcount = 'count';
-
+RxInt count = 0.obs;
   Producthelper._createInstance();
 
   static final Producthelper instance = Producthelper._createInstance();
@@ -110,10 +113,8 @@ class Producthelper extends GetxController{
     Database db = await this.database;
 
     final List<Map<String,dynamic>> qr = await db.query(productTable);
-  //  print(qr);
+    count.value = qr.length;
     return qr.map((e) => Product.fromMapObject(e)).toList();
-
-
   }
 
   deleteAll() async {

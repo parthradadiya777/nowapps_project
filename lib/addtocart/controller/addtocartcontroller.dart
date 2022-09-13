@@ -10,8 +10,8 @@ class AddCartController extends GetxController{
 
 
   RxDouble totalprice = 0.0.obs;
-
   void calcTotal() async{
+
     double total = (await Producthelper().calculateTotal())[0]['Total'];
     print(total);
     totalprice.value = total;

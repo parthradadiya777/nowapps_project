@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../sqflite_service/sqflite_service.dart';
 import '../serices/product_services.dart';
 
 class ProductApiController extends GetxController with StateMixin {
@@ -17,4 +18,13 @@ class ProductApiController extends GetxController with StateMixin {
   }
 
 
+  RxList list = [].obs;
+
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    Producthelper().fetchdata();
+  }
 }

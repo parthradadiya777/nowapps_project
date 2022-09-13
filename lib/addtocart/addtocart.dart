@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:project1/store/widgets/backgroundwidget.dart';
+import '../main.dart';
 import '../model/sqflite_model.dart';
 import '../product/product.dart';
 import '../product_details/productslist.dart';
@@ -50,6 +53,59 @@ Image? image;
     // TODO: implement initState
     super.initState();
     loadImageFromPrefs();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+              ),
+            ));
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body!)],
+                  ),
+                ),
+              );
+            });
+      }
+    });
+  }
+  void showNotification() {
+
+    flutterLocalNotificationsPlugin.show(
+        0,
+        "Order Confirm Successfully",
+        "Enjoy ",
+        NotificationDetails(
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher')));
   }
   @override
   Widget build(BuildContext context) {
@@ -165,8 +221,6 @@ Image? image;
                                                      ////  share =  SharedPreferences.getInstance();
                                                       // s =  SharedPreferences.getInstance();
 
-
-
                                                       setState(() {
                                                         l = s.getInt('quantity');
                                                        p.add(l);
@@ -179,6 +233,12 @@ Image? image;
                                                       setState(() {
                                                         if(p[index]!=0) {
                                                           p[index]--;
+                                                        }else if(p[index] <1) {
+                                                          Producthelper()
+                                                              .deleteNote(
+                                                              snapshot
+                                                                  .data[index]
+                                                                  .id);
                                                         }
                                                       });
                                                     }, icon: const Icon(Icons.remove))
@@ -195,6 +255,8 @@ Image? image;
                                                       snapshot
                                                           .data[index]
                                                           .id);
+
+                                                  Producthelper().count--;
 
                                                 }, icon: const Icon(Icons.delete))
                                               ],
@@ -239,56 +301,100 @@ Image? image;
               }
             }
         ),
-                        Row(
-                          children: [
-                            //   Text('Total Item : ${snapshot.data.length}'),
-                            Obx(() => Text(
-                                ' Total : ${controller.totalprice.value}',style: const TextStyle(fontWeight: FontWeight.bold))),
-                          ],
+                        // Row(
+                        //   children: [
+                        //     //   Text('Total Item : ${snapshot.data.length}'),
+                        //     Obx(() => Text(
+                        //         ' Total : ${controller.totalprice.value}',style: const TextStyle(fontWeight: FontWeight.bold))),
+                        //   ],
+                        // )
+
+                        const SizedBox(
+                          width: 20,
+                        ),
+
+                        InkWell(
+                          onTap: (){
+                            showNotification();
+                            showDialog(context: context, builder: (_){
+                              return AlertDialog(
+                                title: const Text('Confirm'),
+                                content: const Text('Check Out In this Store'),
+                                actions: [
+                                  TextButton(onPressed: (){
+
+                                    Get.back();
+                                    // Get.off(ShopePage());
+                                    Navigator.pushNamedAndRemoveUntil(context, ShopePage.id, (route) => false);
+
+                                  }, child: Text('Yes')),
+                                  TextButton(onPressed: (){
+                                    Get.back();
+
+                                  }, child: Text('No')),
+
+                                ],
+                              );
+                            });
+                          },
+                          child: Container(
+
+                              decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                children: const [
+                                  Text('Confirm',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
+                                ],
+                              )
+                          ),
                         )
                       ],
                     ),
                   ),
+ SizedBox(
+   width: 20,
+ ),
+ InkWell(
+            onTap: (){
 
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  InkWell(
-                    onTap: (){
-                      showDialog(context: context, builder: (_){
-                        return AlertDialog(
-                          title: const Text('Confirm'),
-                          content: const Text('Check Out In this Store'),
-                          actions: [
-                            TextButton(onPressed: (){
-                              Get.back();
-                              // Get.off(ShopePage());
-                              Navigator.pushNamedAndRemoveUntil(context, ShopePage.id, (route) => false);
+      showDialog(context: context, builder: (_){
+      return AlertDialog(
+      title: const Text('Check Out'),
+      content: const Text('Check Out In this Store'),
+      actions: [
+      TextButton(onPressed: (){
+      Get.back();
+      // Get.off(ShopePage());
+      Navigator.pushNamedAndRemoveUntil(context, ShopePage.id, (route) => false);
 
-                            }, child: Text('Yes')),
-                            TextButton(onPressed: (){
-                              Get.back();
+      }, child: Text('Yes')),
+      TextButton(onPressed: (){
+      Get.back();
 
-                            }, child: Text('No')),
+      }, child: Text('No')),
 
-                          ],
-                        );
-                      });
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          color: Colors.white,
-borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: const [
-                             Text('Confirm',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),)
-                          ],
-                        )
-                    ),
-                  )
+      ],
+      );
+      });
+      },
+        child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10)
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const [
+                Text('Check Out',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
+              ],
+            )
+        ),
+      )
+
                 ],
               ),
             ],
